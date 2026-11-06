@@ -39,6 +39,7 @@ No hay servidor ni base de datos, los datos están escritos en el código (`Logi
 ## Extras
 
 - **Modo oscuro:** hay un esquema de colores oscuro que se activa según el modo del móvil.
+- **Botón de modo claro/oscuro:** arriba a la derecha (🌙 / ☀️) para cambiar de modo sin salir de la app.
 - **Transición animada** entre las dos pantallas (`AnimatedContent`: una desliza y se funde mientras sale la otra).
 - **Validación del formulario:** avisa si el correo no tiene formato válido, si la contraseña es muy corta o si los datos no coinciden.
 - **Componentes propios reutilizables:** `LogoCircular` y `LogoPato` se usan en las dos pantallas.

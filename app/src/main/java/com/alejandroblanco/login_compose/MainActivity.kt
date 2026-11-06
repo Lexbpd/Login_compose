@@ -1,6 +1,8 @@
 package com.alejandroblanco.login_compose
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
@@ -10,15 +12,21 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.alejandroblanco.login_compose.ui.BotonModo
 import com.alejandroblanco.login_compose.ui.LoginScreen
 import com.alejandroblanco.login_compose.ui.WelcomeScreen
 import com.alejandroblanco.login_compose.ui.theme.Login_composeTheme
@@ -26,12 +34,27 @@ import com.alejandroblanco.login_compose.ui.theme.Login_composeTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // La app se dibuja bajo la barra de estado y la de navegación (pantalla completa).
-        enableEdgeToEdge()
         // setContent: aquí empieza Compose. Todo lo de dentro es interfaz declarativa.
         setContent {
-            Login_composeTheme {
-                App()
+            // empieza con el modo del movil, pero el boton lo puede cambiar
+            val sistemaOscuro = isSystemInDarkTheme()
+            var modoOscuro by rememberSaveable { mutableStateOf(sistemaOscuro) }
+
+            // La app se dibuja bajo la barra de estado y la de navegación (pantalla completa).
+            // Lo repetimos cada vez que cambia el modo para que los iconos de las barras se vean bien
+            DisposableEffect(modoOscuro) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { modoOscuro },
+                    navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { modoOscuro },
+                )
+                onDispose { }
+            }
+
+            Login_composeTheme(darkTheme = modoOscuro) {
+                App(
+                    modoOscuro = modoOscuro,
+                    onCambiarModo = { modoOscuro = !modoOscuro },
+                )
             }
         }
     }
@@ -53,7 +76,10 @@ class MainActivity : ComponentActivity() {
  * escrito) se descarta. Al volver, Compose la crea de cero y los campos están vacíos.
  */
 @Composable
-private fun App() {
+private fun App(
+    modoOscuro: Boolean,
+    onCambiarModo: () -> Unit,
+) {
     var nombreUsuario by rememberSaveable { mutableStateOf<String?>(null) }
 
     // Scaffold nos da el fondo del tema y calcula "innerPadding":
@@ -61,7 +87,8 @@ private fun App() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val modifier = Modifier.padding(innerPadding)
 
-        
+        // Box para poner el boton del modo encima de las pantallas, arriba a la derecha
+        Box(modifier = Modifier.fillMaxSize()) {
         // AnimatedContent anima el cambio entre el login y la bienvenida:
         // una pantalla entra deslizando y la otra sale, las dos con fundido
         AnimatedContent(
@@ -89,6 +116,16 @@ private fun App() {
                     modifier = modifier,
                 )
             }
+        }
+
+        BotonModo(
+            modoOscuro = modoOscuro,
+            onCambiar = onCambiarModo,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(innerPadding)
+                .padding(8.dp),
+        )
         }
     }
 }
