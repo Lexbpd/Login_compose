@@ -5,6 +5,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
+// Esquema claro: le dice a Material que color usa en cada rol
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
     onPrimary = OnPrimary,
@@ -21,7 +22,7 @@ private val LightColorScheme = lightColorScheme(
     onBackground = OnSurface,
 )
 
-// Esquema oscuro: mismos roles, colores "Dark...".
+// Esquema oscuro: igual que el claro pero con los colores Dark
 private val DarkColorScheme = darkColorScheme(
     primary = DarkPrimary,
     onPrimary = DarkOnPrimary,
@@ -40,11 +41,12 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun Login_composeTheme(
-    // Por defecto sigue el ajuste del sistema; se puede forzar desde un @Preview.
+    // por defecto usa el modo del movil, pero en los preview se puede forzar
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
+        // elegimos el esquema segun si el movil esta en modo oscuro
         colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         content = content,
