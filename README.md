@@ -73,6 +73,3 @@ app/src/main/java/com/alejandroblanco/login_compose/
 2. Esperar a que termine la sincronización de Gradle.
 3. Ejecutar en un emulador o en un móvil con el botón de play (minSdk 26).
 
-## Figma
-
-Enlace al diseño: _(pendiente de poner)_
