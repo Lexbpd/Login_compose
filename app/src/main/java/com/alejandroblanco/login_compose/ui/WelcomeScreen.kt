@@ -26,6 +26,9 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alejandroblanco.login_compose.ui.theme.Login_composeTheme
+import com.alejandroblanco.login_compose.ui.theme.Primary
+import com.alejandroblanco.login_compose.ui.theme.Secondary
+import com.alejandroblanco.login_compose.ui.theme.Tertiary
 
 /*
  * PANTALLA 2: BIENVENIDA
@@ -89,10 +92,10 @@ fun WelcomeScreen(
 // Mi ilustracion
 @Composable
 private fun IlustracionPlato(modifier: Modifier = Modifier) {
-    // colores del tema
-    val campana = MaterialTheme.colorScheme.primary
-    val bandeja = MaterialTheme.colorScheme.secondary
-    val dorado = MaterialTheme.colorScheme.tertiary
+    // uso los colores fuertes en los dos modos, con los del modo oscuro se veia muy apagado
+    val campana = Primary
+    val bandeja = Secondary
+    val dorado = Tertiary
     val brillo = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.35f)   // blanco casi transparente
 
     Canvas(modifier = modifier.fillMaxWidth()) {

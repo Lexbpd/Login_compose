@@ -6,6 +6,8 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,8 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alejandroblanco.login_compose.ui.BotonModo
 import com.alejandroblanco.login_compose.ui.LoginScreen
+import com.alejandroblanco.login_compose.ui.Persiana
 import com.alejandroblanco.login_compose.ui.WelcomeScreen
 import com.alejandroblanco.login_compose.ui.theme.Login_composeTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +88,11 @@ private fun App(
 ) {
     var nombreUsuario by rememberSaveable { mutableStateOf<String?>(null) }
 
+    // progreso de la persiana: 0 = abierta, 1 = cerrada, 2 = ya se ha vuelto a abrir
+    val persiana = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    var animando by remember { mutableStateOf(false) }
+
     // Scaffold nos da el fondo del tema y calcula "innerPadding":
     // el espacio que ocupan las barras del sistema, para no taparnos con ellas.
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -120,12 +131,31 @@ private fun App(
 
         BotonModo(
             modoOscuro = modoOscuro,
-            onCambiar = onCambiarModo,
+            onCambiar = {
+                // si la persiana ya se esta moviendo no hacemos nada
+                if (!animando) {
+                    scope.launch {
+                        animando = true
+                        // 1) la persiana se cierra de arriba a abajo tapando la pantalla (0 -> 1)
+                        persiana.animateTo(1f, tween(1100, easing = FastOutSlowInEasing))
+                        // 2) con la pantalla tapada cambiamos de modo
+                        onCambiarModo()
+                        // 3) la persiana se abre tambien de arriba a abajo (1 -> 2)
+                        persiana.animateTo(2f, tween(1100, easing = FastOutSlowInEasing))
+                        // 4) la dejamos otra vez en 0 para el siguiente cambio
+                        persiana.snapTo(0f)
+                        animando = false
+                    }
+                }
+            },
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(innerPadding)
                 .padding(8.dp),
         )
+
+        // la persiana va encima de todo
+        Persiana(progreso = { persiana.value })
         }
     }
 }

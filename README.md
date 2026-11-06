@@ -17,9 +17,13 @@ No hay servidor ni base de datos, los datos están escritos en el código (`Logi
 
 ## Capturas
 
-| Login | Error | Bienvenida |
+| Login (modo oscuro) | Error | Bienvenida (modo oscuro) |
 |---|---|---|
 | ![Login](capturas/01_login.png) | ![Error](capturas/02_error.png) | ![Bienvenida](capturas/03_bienvenida.png) |
+
+| Persiana al cambiar de modo | Bienvenida (modo claro) |
+|---|---|
+| ![Persiana](capturas/05_persiana.png) | ![Bienvenida modo claro](capturas/04_bienvenida_claro.png) |
 
 ## Cómo funciona
 
@@ -40,6 +44,7 @@ No hay servidor ni base de datos, los datos están escritos en el código (`Logi
 
 - **Modo oscuro:** hay un esquema de colores oscuro que se activa según el modo del móvil.
 - **Botón de modo claro/oscuro:** arriba a la derecha (🌙 / ☀️) para cambiar de modo sin salir de la app.
+- **Transición de persiana:** al cambiar de modo, una persiana de madera (dibujada con `Canvas`) se cierra y se abre de arriba a abajo.
 - **Transición animada** entre las dos pantallas (`AnimatedContent`: una desliza y se funde mientras sale la otra).
 - **Validación del formulario:** avisa si el correo no tiene formato válido, si la contraseña es muy corta o si los datos no coinciden.
 - **Componentes propios reutilizables:** `LogoCircular` y `LogoPato` se usan en las dos pantallas.
@@ -54,6 +59,8 @@ app/src/main/java/com/alejandroblanco/login_compose/
     WelcomeScreen.kt     pantalla de bienvenida
     LogoCircular.kt      círculo con el logo
     LogoPato.kt          pato dibujado con Canvas
+    BotonModo.kt         botón para cambiar claro/oscuro
+    Persiana.kt          persiana de la transición
     theme/
       Color.kt           colores (claro y oscuro)
       Theme.kt           tema de Material 3
